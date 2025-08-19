@@ -1,0 +1,26 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+*.key
+*.pdf
+*.rtf
+*.xlsx
+*.xls
+*.txt
+*.csv
+*.zip
+*.7z
+*.doc
+*.docx
+raw/
+old/
+
+# Virtual environments
+.venv
+.conda
+*.lock
+

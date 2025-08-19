@@ -162,7 +162,7 @@ if __name__ == "__main__":
 
                         results = pd.concat([results, pd.DataFrame([r])])
 
-                        if idx % 10 == 0 and len(results):
+                        if idx % 5 == 0 and len(results):
                             save_results(results, result_file)
 
                     except Exception as e:

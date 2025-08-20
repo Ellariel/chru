@@ -25,6 +25,7 @@ if __name__ == "__main__":
     print(f"{len(data)} articles found.")
 
     data['text_raw'] = data['text_raw'].apply(cut)
+    data['hash'] = data['text_raw'].apply(hash)
 
     data.drop_duplicates(subset=['outlet', 'datetime', 'word_count'],
                          inplace=True)

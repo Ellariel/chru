@@ -57,6 +57,7 @@ def save_results(results, file_name):
             'version',
             'subset',
             'outlet',
+            'hash',
             'datetime',
             'word_count',
             'tested_code',        
@@ -82,7 +83,7 @@ if __name__ == "__main__":
     parser.add_argument('--test', default=1, type=int)
     parser.add_argument('--ver', default='v1', type=str)
     parser.add_argument('--code', default=None, type=str)
-    parser.add_argument('--model', default='llama3.3:70b', type=str)
+    parser.add_argument('--model', default='gpt-oss:120b', type=str) #'gpt-oss:120b', 'llama3.3:70b'
     parser.add_argument('--temp', default=1.5, type=float)
     parser.add_argument('--seed', default=1313, type=int)
     parser.add_argument('--endpoint', default=DEF_ENDPOINT, type=str)

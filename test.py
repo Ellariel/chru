@@ -76,9 +76,10 @@ if __name__ == "__main__":
         data = pd.DataFrame()
         for model, d in results[results['tested_code'] == code].groupby(['model']):
             data = d.copy()
-            data[model[0]] = data['code_applied'].apply(lambda x: 1 if code.lower() in str(x).lower() else 0)
+            data[model[0]] = data['code_applied'].apply(lambda x: int(code.lower() in str(x).lower()))
             agreement.append(data[[model[0]]])
         agreement = pd.concat(agreement, axis=1)
+        #print(agreement)
         fleiss_kappa_serie, kappa, z, p_value = fleiss_kappa_with_p(agreement)
         agreement['agreement_sum'] = agreement[agreement.columns].sum(1)
         agreement['fleiss_kappa_serie'] = fleiss_kappa_serie

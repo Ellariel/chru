@@ -12,6 +12,7 @@ dependencies = [
     "pandas",
     "requests",
     "openpyxl",
+    "scipy",
     "scikit-learn",
     "matplotlib",
     "ipykernel",

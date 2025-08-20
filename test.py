@@ -3,6 +3,51 @@ import numpy as np
 import pandas as pd
 from glob import glob
 from sklearn.metrics import f1_score
+from scipy.stats import norm
+
+
+
+def fleiss_kappa_with_p(df: pd.DataFrame):
+    """
+    Compute Fleiss' kappa, per-item agreement, z-score, and p-value.
+    Assumes two categories: "for", "no decision".
+    """
+    # Encode categories
+    matrix = df.to_numpy()
+    n_items, n_raters = matrix.shape
+
+    # Counts per category per item
+    counts = np.zeros((n_items, 2), dtype=int)
+    counts[:, 0] = np.sum(matrix == 0, axis=1)
+    counts[:, 1] = np.sum(matrix == 1, axis=1)
+
+    # Per-item agreement
+    P_i = (np.sum(counts**2, axis=1) - n_raters) / (n_raters * (n_raters - 1))
+    P_bar = np.mean(P_i)
+
+    # Category proportions
+    p_j = np.sum(counts, axis=0) / (n_items * n_raters)
+
+    # Expected agreement
+    P_e = np.sum(p_j**2)
+
+    # Fleiss' kappa
+    kappa = (P_bar - P_e) / (1 - P_e) if (1 - P_e) != 0 else np.nan
+
+    # Variance of kappa (approximation)
+    term1 = np.sum(p_j**2 * (1 - p_j)**2)
+    term2 = (1 - P_e) * (np.sum(p_j**3) - P_e * np.sum(p_j**2))
+    var_kappa = (term1 - term2) / (n_items * n_raters * (n_raters - 1) * (1 - P_e)**2)
+
+    # z-score and p-value
+    if var_kappa > 0:
+        z = kappa / np.sqrt(var_kappa)
+        p_value = 2 * (1 - norm.cdf(abs(z)))
+    else:
+        z, p_value = np.nan, np.nan
+
+    return pd.Series(P_i, index=df.index, name="per_item_agreement"), kappa, z, p_value
+
 
 
 
@@ -34,7 +79,12 @@ if __name__ == "__main__":
             data[model[0]] = data['code_applied'].apply(lambda x: 1 if code.lower() in str(x).lower() else 0)
             agreement.append(data[[model[0]]])
         agreement = pd.concat(agreement, axis=1)
-        agreement['agreement'] = agreement[agreement.columns].sum(1)
+        fleiss_kappa_serie, kappa, z, p_value = fleiss_kappa_with_p(agreement)
+        agreement['agreement_sum'] = agreement[agreement.columns].sum(1)
+        agreement['fleiss_kappa_serie'] = fleiss_kappa_serie
+        agreement['fleiss_kappa'] = kappa
+        agreement['fleiss_kappa_z'] = z
+        agreement['fleiss_kappa_p_value'] = p_value
         agreement[code] = data[code]
         agreement['text_raw'] = data['text_raw']
         agreement.reset_index(drop=True)

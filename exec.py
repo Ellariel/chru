@@ -81,7 +81,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--dir', default=None, type=str)
     parser.add_argument('--test', default=1, type=int)
-    parser.add_argument('--ver', default='v1', type=str)
+    parser.add_argument('--ver', default='v2', type=str)
     parser.add_argument('--code', default=None, type=str)
     parser.add_argument('--model', default='gpt-oss:120b', type=str) #'gpt-oss:120b', 'llama3.3:70b'
     parser.add_argument('--temp', default=1.5, type=float)
@@ -117,8 +117,8 @@ if __name__ == "__main__":
     def run_proccess(subset, code, desc):
             prompt = base_prompt(code,
                                         desc['description'],
-                                        desc['key_features'],
-                                        desc['keywords'])
+                                        desc['key_features'],)
+                                        #desc['keywords'])
             
             if not bool(args.test):
                 texts = os.path.join(base_dir, "texts", subset, "df.csv")

@@ -39,11 +39,11 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--dir', default=None, type=str)
-    parser.add_argument('--ver', default='v1', type=str)
+    parser.add_argument('--ver', default='v2', type=str)
     parser.add_argument('--test', default=1, type=int)
     parser.add_argument('--temp', default=1.5, type=float)
     parser.add_argument('--seed', default=1313, type=int)
-    parser.add_argument('--subset', default=None,
+    parser.add_argument('--subset', default=['ru'],#None,
                         type=str, nargs='+', help='--subset ru ch')
     args = parser.parse_args()
 

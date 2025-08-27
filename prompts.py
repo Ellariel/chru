@@ -1,15 +1,14 @@
 
 def base_prompt(category_name, 
                 description,
-                key_features,
-                keywords):
+                key_features,):
+                #keywords): # **Keywords:** “{keywords}”
     return f"""
 You are tasked with applying qualitative codes to text excerpts, referencing their content. The purpose of this task is to determine whether each text excerpt represents the encoded phenomenon.
 
 **Code Title:** “{category_name}”
 **Description:** “{description}”
 **Key Features:** “{key_features}“
-**Keywords:** “{keywords}”
 
 When evaluating the text, you must:
 

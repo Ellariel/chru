@@ -68,6 +68,8 @@ if __name__ == "__main__":
     results.to_csv(os.path.join(results_dir, f'validation_results.csv'), index=False)
     results.to_excel(os.path.join(results_dir, f'validation_results.xlsx'), index=False)
 
+    models = len(results['model'].drop_duplicates())
+
     for code in results['tested_code'].drop_duplicates():
         agreement = []
         data = pd.DataFrame()
@@ -78,7 +80,7 @@ if __name__ == "__main__":
         agreement = pd.concat(agreement, axis=1)
         kappa, z, p_value, fleiss_kappa_serie = fleiss_kappa(agreement)
         agreement['agreement_sum'] = agreement[agreement.columns].sum(1)
-        agreement['code_applied'] = agreement['agreement_sum'].apply(lambda x: int(x >= 2))
+        agreement['code_applied'] = agreement['agreement_sum'].apply(lambda x: int(x >= round(models / 2)))
         agreement['f1_score'] = f1_score(data[code], agreement['code_applied'], average='weighted')
         agreement['fleiss_kappa_serie'] = fleiss_kappa_serie
         agreement['fleiss_kappa'] = kappa

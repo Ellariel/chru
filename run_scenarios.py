@@ -6,14 +6,19 @@ from subprocess import Popen as new, CREATE_NEW_CONSOLE
 from codes import CODES
 
 models = [
-     'llama3.3:70b',
-     'deepseek-r1:70b',
-     'gpt-oss:120b',
-     'qwen3:235b',
+    'gemma3:27b',
+    'llama3.3:70b',
+    'gpt-oss:120b',
+    #'deepseek-r1:70b',
+    #'qwen3:235b',
 ]
 
+temp = {
+    'ch': 0.6,
+    'ru': 0.8,
+}
 
-def run_scenarios(temp, seed, ver, subset, test, base_dir, windows=False):
+def run_scenarios(seed, ver, subset, test, base_dir, windows=False):
     """
     Run all.
     """
@@ -26,7 +31,7 @@ def run_scenarios(temp, seed, ver, subset, test, base_dir, windows=False):
         for code in codes[subset].keys():
             for model in models:
                 print('\n<-----running scenario----->')
-                threads.append(new(f"uv run {os.path.join(base_dir, 'exec.py')} --model {model} --temp {temp} --seed {seed} --ver {ver} --subset {subset} --code {code} --test {test}",
+                threads.append(new(f"uv run {os.path.join(base_dir, 'exec.py')} --model {model} --temp {temp[subset]} --seed {seed} --ver {ver} --subset {subset} --code {code} --test {test}",
                                             **params))
                 time.sleep(5)
 
@@ -41,15 +46,13 @@ if __name__ == "__main__":
     parser.add_argument('--dir', default=None, type=str)
     parser.add_argument('--ver', default='v3', type=str)
     parser.add_argument('--test', default=1, type=int)
-    parser.add_argument('--temp', default=1.5, type=float)
     parser.add_argument('--seed', default=1313, type=int)
-    parser.add_argument('--subset', default=['ch', 'ru'],#None,
+    parser.add_argument('--subset', default=['ch', 'ru'],
                         type=str, nargs='+', help='--subset ru ch')
     args = parser.parse_args()
 
     base_dir = os.path.dirname(__file__) if args.dir is None else args.dir
 
-    print('temp:', args.temp)
     print('seed:', args.seed)
     print('version:', args.ver)
     print('test:', bool(args.test))
@@ -58,7 +61,7 @@ if __name__ == "__main__":
     if args.subset is None:
         args.subset = codes.keys()
 
-    run_scenarios(args.temp, 
+    run_scenarios(
                   args.seed, 
                   args.ver, 
                   args.subset, 

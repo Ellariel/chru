@@ -36,6 +36,6 @@ if __name__ == "__main__":
     print(f"{len(data)} articles found.")
     if os.path.exists(os.path.join(base_dir, "validation.csv")):
         data = pd.DataFrame(data)
-        val = pd.read_csv(os.path.join(base_dir, "validation.csv"))
+        val = pd.read_csv(os.path.join(base_dir, "validation.csv"), sep=';')
         data = pd.merge(data, val, left_on='outlet', right_on='file_name', how='left')
     data.to_csv(os.path.join(base_dir, 'df.csv'), index=False, sep=';')

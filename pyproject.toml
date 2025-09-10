@@ -14,6 +14,7 @@ dependencies = [
     "openpyxl",
     "scipy",
     "scikit-learn",
+    "statsmodels",
     "matplotlib",
     "ipykernel",
 ]

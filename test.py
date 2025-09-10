@@ -4,50 +4,47 @@ import pandas as pd
 from glob import glob
 from sklearn.metrics import f1_score
 from scipy.stats import norm
+from statsmodels.stats.inter_rater import aggregate_raters
 
 
-
-def fleiss_kappa_with_p(df: pd.DataFrame):
+def fleiss_kappa(df, return_per_item_agreement=True, method="two-tailed"):
     """
-    Compute Fleiss' kappa, per-item agreement, z-score, and p-value.
-    Assumes two categories: "for", "no decision".
+    Compute Fleiss' kappa, z-score, and p-value, per-item agreement
+    Null Hypothesis Kappa = 0	Agreement is due to chance
+    0.01-0.02	Slight agreement
+    0.21-0.40	Fair Agreement
+    0.41-0.60	Moderate Agreement
+    0.61-0.80	Substantial Agreement
+    0.81-1.00	Almost Perfect Agreement
+    Negative (Kappa<0)	Agreement less than that expected by chance
     """
-    # Encode categories
-    matrix = df.to_numpy()
-    n_items, n_raters = matrix.shape
+    # https://en.wikipedia.org/wiki/Fleiss%27s_kappa
+    # https://www.statsmodels.org/dev/generated/statsmodels.stats.inter_rater.aggregate_raters.html
 
-    # Counts per category per item
-    counts = np.zeros((n_items, 2), dtype=int)
-    counts[:, 0] = np.sum(matrix == 0, axis=1)
-    counts[:, 1] = np.sum(matrix == 1, axis=1)
+    n_items, n_raters = df.shape
+    m = aggregate_raters(df.astype(str), n_cat=None)[0] # be careful about NaNs, they are transformed to a category via .astype(str)
+    P_i = (np.sum(m**2, axis=1) - n_raters) / (n_raters * (n_raters - 1)) # Per-item agreement
+    P_j = np.sum(m, axis=0) / (n_items * n_raters) # Category proportions
+    P_e = np.sum(P_j**2) # Expected agreement
+    kappa = (np.mean(P_i) - P_e) / (1 - P_e) if (1 - P_e) != 0 else np.nan # Fleiss' kappa
 
-    # Per-item agreement
-    P_i = (np.sum(counts**2, axis=1) - n_raters) / (n_raters * (n_raters - 1))
-    P_bar = np.mean(P_i)
-
-    # Category proportions
-    p_j = np.sum(counts, axis=0) / (n_items * n_raters)
-
-    # Expected agreement
-    P_e = np.sum(p_j**2)
-
-    # Fleiss' kappa
-    kappa = (P_bar - P_e) / (1 - P_e) if (1 - P_e) != 0 else np.nan
-
-    # Variance of kappa (approximation)
-    term1 = np.sum(p_j**2 * (1 - p_j)**2)
-    term2 = (1 - P_e) * (np.sum(p_j**3) - P_e * np.sum(p_j**2))
+    # variance of kappa (approximation)
+    term1 = np.sum(P_j**2 * (1 - P_j)**2)
+    term2 = (1 - P_e) * (np.sum(P_j**3) - P_e * np.sum(P_j**2))
     var_kappa = (term1 - term2) / (n_items * n_raters * (n_raters - 1) * (1 - P_e)**2)
 
     # z-score and p-value
+    z, p = np.nan, np.nan
     if var_kappa > 0:
         z = kappa / np.sqrt(var_kappa)
-        p_value = 2 * (1 - norm.cdf(abs(z)))
-    else:
-        z, p_value = np.nan, np.nan
+        p = norm.sf(np.abs(z)) # one-sided
+        p = p * 2 if method == "two-tailed" else p
 
-    return pd.Series(P_i, index=df.index, name="per_item_agreement"), kappa, z, p_value
+    if return_per_item_agreement:
+        return kappa, z, p, pd.Series(P_i, index=df.index, 
+                                            name="per_item_agreement"), 
 
+    return kappa, z, p
 
 
 
@@ -80,8 +77,11 @@ if __name__ == "__main__":
             agreement.append(data[[model[0]]])
         agreement = pd.concat(agreement, axis=1)
         #print(agreement)
-        fleiss_kappa_serie, kappa, z, p_value = fleiss_kappa_with_p(agreement)
+        #fleiss_kappa_serie, kappa, z, p_value = fleiss_kappa_with_p(agreement)
+        kappa, z, p_value, fleiss_kappa_serie = fleiss_kappa(agreement)
         agreement['agreement_sum'] = agreement[agreement.columns].sum(1)
+        agreement['code_applied'] = agreement['agreement_sum'].apply(lambda x: int(x >= 2))
+        agreement['f1_score'] = f1_score(data[code], agreement['code_applied'], average='weighted')
         agreement['fleiss_kappa_serie'] = fleiss_kappa_serie
         agreement['fleiss_kappa'] = kappa
         agreement['fleiss_kappa_z'] = z
@@ -102,7 +102,5 @@ if __name__ == "__main__":
     metrics = pd.DataFrame(metrics, columns=['model', 'code', 'f1_score'])
     metrics.to_csv(os.path.join(results_dir, 'validation_metrics.csv'), index=False)
     metrics.to_excel(os.path.join(results_dir, 'validation_metrics.xlsx'), index=False)
-    print(metrics)
-    
-        
+    print(metrics)  
 

@@ -1,18 +1,19 @@
 
 def base_prompt(category_name, 
                 description,
-                key_features,):
-                #keywords): # **Keywords:** “{keywords}”
+                key_features,#):
+                keywords): # **Keywords:** “{keywords}”
     return f"""
 You are tasked with applying qualitative codes to text excerpts, referencing their content. The purpose of this task is to determine whether each text excerpt represents the encoded phenomenon.
 
 **Code Title:** “{category_name}”
 **Description:** “{description}”
 **Key Features:** “{key_features}“
+**Possible Keywords:** “{keywords}”
 
 When evaluating the text, you must:
 
-1. Decide whether the code applies.
+1. Decide whether the code applies. The code applies when any of the features appear in the text or some of the text main points align with the code description.
 2. Provide a concise justification for your decision (2–3 sentences).
 3. Indicate your confidence level (a number between 0.0 and 1.0).
 4. List the applied code if relevant.

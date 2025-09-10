@@ -76,8 +76,6 @@ if __name__ == "__main__":
             data[model[0]] = data['code_applied'].apply(lambda x: int(code.lower() in str(x).lower()))
             agreement.append(data[[model[0]]])
         agreement = pd.concat(agreement, axis=1)
-        #print(agreement)
-        #fleiss_kappa_serie, kappa, z, p_value = fleiss_kappa_with_p(agreement)
         kappa, z, p_value, fleiss_kappa_serie = fleiss_kappa(agreement)
         agreement['agreement_sum'] = agreement[agreement.columns].sum(1)
         agreement['code_applied'] = agreement['agreement_sum'].apply(lambda x: int(x >= 2))

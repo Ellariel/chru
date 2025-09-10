@@ -117,8 +117,8 @@ if __name__ == "__main__":
     def run_proccess(subset, code, desc):
             prompt = base_prompt(code,
                                         desc['description'],
-                                        desc['key_features'],#)
-                                        desc['keywords'])
+                                        desc['key_features'],)
+                                        #desc['keywords'])
             
             if not bool(args.test):
                 texts = os.path.join(base_dir, "texts", subset, "df.csv")

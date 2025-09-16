@@ -9,13 +9,14 @@ models = [
     'gemma3:27b',
     'llama3.3:70b',
     'gpt-oss:120b',
+    #'gpt-oss:20b',
     #'deepseek-r1:70b',
-    #'qwen3:235b',
+    'qwen3:235b',
 ]
 
 temp = {
-    'ch': 0.6,
-    'ru': 0.8,
+    'ch': 0.80,
+    'ru': 0.80,
 }
 
 def run_scenarios(seed, ver, subset, test, base_dir, windows=False):
@@ -44,10 +45,10 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--dir', default=None, type=str)
-    parser.add_argument('--ver', default='v3', type=str)
+    parser.add_argument('--ver', default='v4', type=str)
     parser.add_argument('--test', default=1, type=int)
     parser.add_argument('--seed', default=1313, type=int)
-    parser.add_argument('--subset', default=['ch', 'ru'],
+    parser.add_argument('--subset', default=['ch'], # , 'ru' ch
                         type=str, nargs='+', help='--subset ru ch')
     args = parser.parse_args()
 

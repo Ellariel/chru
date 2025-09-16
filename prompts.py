@@ -12,7 +12,7 @@ You are tasked with applying qualitative codes to text excerpts, referencing the
 
 When evaluating the text, you must:
 
-1. Decide whether the code applies. The code applies when some of the features appear in the text or some of the description main points align with the text content.
+1. Decide whether the code applies. The code applies when several features appear in the text or some of the description main points align with the text content.
 2. Provide a concise justification for your decision (2–3 sentences).
 3. Indicate your confidence level (a number between 0.0 and 1.0).
 4. List the applied code if relevant.

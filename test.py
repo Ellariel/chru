@@ -5,6 +5,53 @@ from glob import glob
 from sklearn.metrics import f1_score
 from scipy.stats import norm
 from statsmodels.stats.inter_rater import aggregate_raters
+import krippendorff
+
+
+def krippendorffs_alpha(df, measurement="nominal", 
+                        return_per_item_agreement=True, 
+                        return_bootstraped_z_score=True,
+                        n_iter_for_bootstrap=100,
+                        bootstrap_seed=13,
+                        method="two-tailed"):
+    """
+    Compute Krippendorff' alpha, z-score, and p-value, per-item agreement
+    Level of measurement = "nominal", "ordinal", "interval", "ratio"
+    Null hypothesis: Agreement is due to chance
+    """
+    # https://en.wikipedia.org/wiki/Krippendorff's_Alpha
+    # https://github.com/pln-fing-udelar/fast-krippendorff
+    
+    df = df.astype(str) # be careful about NaNs, they are transformed to a category via .astype(str)
+    m = aggregate_raters(df, n_cat=None)[0][:,:-1]
+    alpha = krippendorff.alpha(value_counts=m, 
+                               level_of_measurement=measurement)
+    
+    # z-score and p-value
+    z, p = np.nan, np.nan
+    if return_bootstraped_z_score:
+        np.random.seed(bootstrap_seed)
+        null_dist = []
+        for _ in range(n_iter_for_bootstrap):
+            m = aggregate_raters(df.apply(np.random.permutation, axis=0), 
+                                 n_cat=None)[0][:,:-1]
+            null_alpha = krippendorff.alpha(value_counts=m, 
+                               level_of_measurement=measurement)
+            null_dist.append(null_alpha)
+        mu, sigma = np.mean(null_dist), np.std(null_dist)
+        if sigma > 0:
+            z = (alpha - mu) / sigma
+            p = norm.sf(np.abs(z)) # one-tailed, agreement > chance
+            p = p * 2 if method == "two-tailed" else p
+
+    if return_per_item_agreement:
+        agreements = {}
+        for idx, row in df.astype(str).iterrows():
+            row = row.dropna()
+            agreements[idx] = np.nan if len(row) <= 1 else row.value_counts().max() / len(row)
+        return alpha, z, p, pd.Series(agreements, index=df.index, name="per_item_agreement")
+
+    return alpha, z, p 
 
 
 def fleiss_kappa(df, return_per_item_agreement=True, method="two-tailed"):
@@ -22,7 +69,7 @@ def fleiss_kappa(df, return_per_item_agreement=True, method="two-tailed"):
     # https://www.statsmodels.org/dev/generated/statsmodels.stats.inter_rater.aggregate_raters.html
 
     n_items, n_raters = df.shape
-    m = aggregate_raters(df.astype(str), n_cat=None)[0] # be careful about NaNs, they are transformed to a category via .astype(str)
+    m = aggregate_raters(df.astype(str), n_cat=None)[0] # df.astype(str) be careful about NaNs, they are transformed to a category via .astype(str)
     P_i = (np.sum(m**2, axis=1) - n_raters) / (n_raters * (n_raters - 1)) # Per-item agreement
     P_j = np.sum(m, axis=0) / (n_items * n_raters) # Category proportions
     P_e = np.sum(P_j**2) # Expected agreement
@@ -75,17 +122,27 @@ if __name__ == "__main__":
         data = pd.DataFrame()
         for model, d in results[results['tested_code'] == code].groupby(['model']):
             data = d.copy()
-            data[model[0]] = data['code_applied'].apply(lambda x: int(code.lower() in str(x).lower()))
+            data[model[0]] = data['code_applied'].apply(lambda x: int(code.lower() in str(x)[:30].lower()))
             agreement.append(data[[model[0]]])
         agreement = pd.concat(agreement, axis=1)
-        kappa, z, p_value, fleiss_kappa_serie = fleiss_kappa(agreement)
+
+        kappa, kappa_z, kappa_p, kappa_serie = fleiss_kappa(agreement)
+        #alpha, alpha_z, alpha_p, alpha_serie = krippendorffs_alpha(agreement)
+
         agreement['agreement_sum'] = agreement[agreement.columns].sum(1)
-        agreement['code_applied'] = agreement['agreement_sum'].apply(lambda x: int(x >= round(models / 2)))
+        agreement['code_applied'] = agreement['agreement_sum'].apply(lambda x: int(x > round(models / 2)))
         agreement['f1_score'] = f1_score(data[code], agreement['code_applied'], average='weighted')
-        agreement['fleiss_kappa_serie'] = fleiss_kappa_serie
+
+        agreement['fleiss_kappa_serie'] = kappa_serie
         agreement['fleiss_kappa'] = kappa
-        agreement['fleiss_kappa_z'] = z
-        agreement['fleiss_kappa_p_value'] = p_value
+        agreement['fleiss_kappa_z'] = kappa_z
+        agreement['fleiss_kappa_p_value'] = kappa_p
+
+        #agreement['krippendorffs_alpha_serie'] = alpha_serie
+        #agreement['krippendorffs_alpha'] = alpha
+        #agreement['krippendorffs_alpha_z'] = alpha_z
+        #agreement['krippendorffs_alpha_p_value'] = alpha_p
+
         agreement[code] = data[code]
         agreement['text_raw'] = data['text_raw']
         agreement.reset_index(drop=True)
@@ -96,7 +153,7 @@ if __name__ == "__main__":
     metrics = []
     for (model, code), data in results.groupby(['model', 'tested_code']):
         data = data.copy()
-        data['result'] = data['code_applied'].apply(lambda x: 1 if code.lower() in str(x).lower() else 0)
+        data['result'] = data['code_applied'].apply(lambda x: 1 if code.lower() in str(x)[:30].lower() else 0)
         metrics.append((model, code, f1_score(data[code], data['result'], average='weighted')))
     
     metrics = pd.DataFrame(metrics, columns=['model', 'code', 'f1_score'])

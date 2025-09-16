@@ -23,7 +23,9 @@ def krippendorffs_alpha(df, measurement="nominal",
     # https://github.com/pln-fing-udelar/fast-krippendorff
     
     df = df.astype(str) # be careful about NaNs, they are transformed to a category via .astype(str)
-    m = aggregate_raters(df, n_cat=None)[0][:,:-1]
+    #print(df)
+    m = aggregate_raters(df, n_cat=None)[0]#[:,:-1]
+    #print(m)
     alpha = krippendorff.alpha(value_counts=m, 
                                level_of_measurement=measurement)
     
@@ -34,7 +36,7 @@ def krippendorffs_alpha(df, measurement="nominal",
         null_dist = []
         for _ in range(n_iter_for_bootstrap):
             m = aggregate_raters(df.apply(np.random.permutation, axis=0), 
-                                 n_cat=None)[0][:,:-1]
+                                 n_cat=None)[0]#[:,:-1]
             null_alpha = krippendorff.alpha(value_counts=m, 
                                level_of_measurement=measurement)
             null_dist.append(null_alpha)
@@ -70,6 +72,7 @@ def fleiss_kappa(df, return_per_item_agreement=True, method="two-tailed"):
 
     n_items, n_raters = df.shape
     m = aggregate_raters(df.astype(str), n_cat=None)[0] # df.astype(str) be careful about NaNs, they are transformed to a category via .astype(str)
+    #print(m)
     P_i = (np.sum(m**2, axis=1) - n_raters) / (n_raters * (n_raters - 1)) # Per-item agreement
     P_j = np.sum(m, axis=0) / (n_items * n_raters) # Category proportions
     P_e = np.sum(P_j**2) # Expected agreement
@@ -125,9 +128,9 @@ if __name__ == "__main__":
             data[model[0]] = data['code_applied'].apply(lambda x: int(code.lower() in str(x)[:30].lower()))
             agreement.append(data[[model[0]]])
         agreement = pd.concat(agreement, axis=1)
-
+        
         kappa, kappa_z, kappa_p, kappa_serie = fleiss_kappa(agreement)
-        #alpha, alpha_z, alpha_p, alpha_serie = krippendorffs_alpha(agreement)
+        alpha, alpha_z, alpha_p, alpha_serie = krippendorffs_alpha(agreement)
 
         agreement['agreement_sum'] = agreement[agreement.columns].sum(1)
         agreement['code_applied'] = agreement['agreement_sum'].apply(lambda x: int(x > round(models / 2)))
@@ -138,10 +141,10 @@ if __name__ == "__main__":
         agreement['fleiss_kappa_z'] = kappa_z
         agreement['fleiss_kappa_p_value'] = kappa_p
 
-        #agreement['krippendorffs_alpha_serie'] = alpha_serie
-        #agreement['krippendorffs_alpha'] = alpha
-        #agreement['krippendorffs_alpha_z'] = alpha_z
-        #agreement['krippendorffs_alpha_p_value'] = alpha_p
+        agreement['krippendorffs_alpha_serie'] = alpha_serie
+        agreement['krippendorffs_alpha'] = alpha
+        agreement['krippendorffs_alpha_z'] = alpha_z
+        agreement['krippendorffs_alpha_p_value'] = alpha_p
 
         agreement[code] = data[code]
         agreement['text_raw'] = data['text_raw']

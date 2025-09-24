@@ -9,7 +9,7 @@ def read_file(f):
     with open(f, 'r', encoding='utf-8') as file:
         return file.read()
 
-DOC_SPLITER = 'Document DLSE'
+DOC_SPLITER = 'Document DLS'
 WORDS_SPLITER = ' words'
 
 if __name__ == "__main__":

@@ -99,6 +99,33 @@ def fleiss_kappa(df, return_per_item_agreement=True, method="two-tailed"):
 
 
 
+WEIGHTS = {
+    'code_adapted_sovereignty': {
+        'gemma3:27b': 0.546667,
+        'gpt-oss:120b': 0.753333,
+        'llama3.3:70b': 0.660000,
+        'qwen3:235b': 0.745014,        
+    },
+    'code_conditional_loyalty': {
+        'gemma3:27b': 0.700717,
+        'gpt-oss:120b': 0.753133,
+        'llama3.3:70b': 0.800000,
+        'qwen3:235b': 0.900000,  
+    },
+    'code_vulnerable_victims': {
+        'gemma3:27b': 0.481481,
+        'gpt-oss:120b': 0.708287,
+        'llama3.3:70b': 0.759259,
+        'qwen3:235b': 0.686869,  
+    },
+    'code_complicit_enablers': {
+        'gemma3:27b': 0.605128,
+        'gpt-oss:120b': 0.777778,
+        'llama3.3:70b': 0.888889,
+        'qwen3:235b': 0.640693,  
+    },
+}
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
@@ -136,12 +163,20 @@ if __name__ == "__main__":
                 data[model[0]] = data['code_applied'].apply(lambda x: int(code.lower() in str(x)[:30].lower()))
                 agreement.append(data[[model[0]]])
             agreement = pd.concat(agreement, axis=1)
+            model_columns = agreement.columns
             
             kappa, kappa_z, kappa_p, kappa_serie = fleiss_kappa(agreement)
             alpha, alpha_z, alpha_p, alpha_serie = krippendorffs_alpha(agreement)
 
             agreement['agreement_sum'] = agreement[agreement.columns].sum(1)
             agreement['code_applied'] = agreement['agreement_sum'].apply(lambda x: int(x > round(models / 2)))
+
+            for c in model_columns:
+                agreement[c] = agreement[c].apply(lambda x: WEIGHTS[code][c] if pd.notna(x) and bool(x) else x)
+
+            agreement['w_agreement_sum'] = agreement[model_columns].sum(1)
+            agreement['w_code_applied'] = agreement['w_agreement_sum'].apply(lambda x: int(x > sum(WEIGHTS[code].values()) / 2))
+
 
             agreement['fleiss_kappa_serie'] = kappa_serie
             agreement['fleiss_kappa'] = kappa
@@ -153,7 +188,17 @@ if __name__ == "__main__":
             agreement['krippendorffs_alpha_z'] = alpha_z
             agreement['krippendorffs_alpha_p_value'] = alpha_p
 
-            agreement['text_raw'] = data['text_raw']
+            #agreement['text_raw'] = data['text_raw']
+            #agreement['hash'] = data['hash']
+            #agreement['subset'] = data['subset']
+
+            texts = os.path.join(base_dir, "texts", data['subset'].iloc[0], "df.csv")
+            texts = pd.read_csv(texts, sep=';')
+
+            #agreement = pd.merge(agreement, texts, how='left',
+            #                     on='text_raw')
+            agreement = pd.concat([agreement, texts], axis=1)
+
             agreement.reset_index(drop=True)
             agreement.to_csv(os.path.join(results_dir, f'full_agreement_{code}.csv'), index=False)
             agreement.to_excel(os.path.join(results_dir, f'full_agreement_{code}.xlsx'), index=False)

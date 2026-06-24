@@ -6,20 +6,23 @@ from subprocess import Popen as new, CREATE_NEW_CONSOLE
 from codes import CODES
 
 models = [
-    'gemma3:27b',
-    'llama3.3:70b',
-    'gpt-oss:120b',
+    # "gemma3:27b",
+    "llama3.3:70b",
+    "gpt-oss:120b",
     #'gpt-oss:20b',
-    #'deepseek-r1:70b',
-    'qwen3:235b',
+    "deepseek-r1:70b",
+    # "qwen3:235b",
+    # "qwen3-next:80b",
+    "qwen2.5:72b",
 ]
 
 temp = {
-    'ch': 0.80,
-    'ru': 0.80,
+    "ch": 0.80,
+    "ru": 0.80,
 }
 
-def run_scenarios(seed, ver, subset, test, base_dir, windows=False):
+
+def run_scenarios(seed, ver, subset, test, base_dir, windows=False, attempts=50):
     """
     Run all.
     """
@@ -27,46 +30,45 @@ def run_scenarios(seed, ver, subset, test, base_dir, windows=False):
     threads = []
     params = dict() if not windows else dict(creationflags=CREATE_NEW_CONSOLE)
 
-    for subset in args.subset:
-        print('subset:', subset)
-        for code in codes[subset].keys():
-            for model in models:
-                print('\n<-----running scenario----->')
-                threads.append(new(f"uv run {os.path.join(base_dir, 'exec.py')} --model {model} --temp {temp[subset]} --seed {seed} --ver {ver} --subset {subset} --code {code} --test {test}",
-                                            **params))
-                time.sleep(5)
-
-    [i.wait() for i in threads]
-
+    for attempt in range(attempts):
+        for subset in args.subset:
+            print("subset:", subset)
+            for code in codes[subset].keys():
+                for model in models:
+                    print("\n<-----running scenario----->")
+                    threads.append(
+                        new(
+                            f"uv run {os.path.join(base_dir, 'exec.py')} --model {model} --temp {temp[subset]} --endpoint def --seed {seed} --ver {ver} --subset {subset} --code {code} --test {test}",
+                            **params,
+                        )
+                    )
+                    time.sleep(5)
+        [i.wait() for i in threads]
 
 
 if __name__ == "__main__":
-
-
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dir', default=None, type=str)
-    parser.add_argument('--ver', default='v4', type=str)
-    parser.add_argument('--test', default=0, type=int)
-    parser.add_argument('--seed', default=1313, type=int)
-    parser.add_argument('--subset', default=['ru'], # , 'ru' ch
-                        type=str, nargs='+', help='--subset ru ch')
+    parser.add_argument("--dir", default=None, type=str)
+    parser.add_argument("--ver", default="v6", type=str)
+    parser.add_argument("--test", default=0, type=int)
+    parser.add_argument("--seed", default=1313, type=int)
+    parser.add_argument(
+        "--subset",
+        default=["ru"],  # , 'ru' ch
+        type=str,
+        nargs="+",
+        help="--subset ru ch",
+    )
     args = parser.parse_args()
 
     base_dir = os.path.dirname(__file__) if args.dir is None else args.dir
 
-    print('seed:', args.seed)
-    print('version:', args.ver)
-    print('test:', bool(args.test))
+    print("seed:", args.seed)
+    print("version:", args.ver)
+    print("test:", bool(args.test))
 
     codes = CODES[args.ver]
     if args.subset is None:
         args.subset = codes.keys()
 
-    run_scenarios(
-                  args.seed, 
-                  args.ver, 
-                  args.subset, 
-                  args.test,
-                  base_dir=base_dir)
-
-
+    run_scenarios(args.seed, args.ver, args.subset, args.test, base_dir=base_dir)

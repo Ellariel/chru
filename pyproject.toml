@@ -13,9 +13,11 @@ dependencies = [
     "requests",
     "openpyxl",
     "scipy",
+    "seaborn",
     "scikit-learn",
     "statsmodels",
     "krippendorff",
     "matplotlib",
     "ipykernel",
+    "striprtf",
 ]

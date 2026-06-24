@@ -419,5 +419,199 @@ CODES = {
         },
     },
     }, # ch
+'v5': {
+    'ru': {
+        'code_conditional_loyalty': {
+            'description': '''
+                Since 2022, the Russian government has responded to the exit of
+                foreign companies by drawing a clear distinction between those that stayed and
+                those that left. Companies that remained in the Russian market have been framed
+                as loyal and reliable partners and have continued to receive political and economic
+                support. In contrast, those that left were portrayed as acting under external political
+                pressure rather than economic logic. The government also attempted to discourage
+                or delay foreign company exits through regulatory and rhetorical means. In some
+                cases, departing firms were placed under temporary external management or faced
+                the threat of nationalization in order to preserve jobs and production continuity. At the
+                same time, officials acknowledged the important role foreign firms played
+                (particularly through tax contributions) and signalled that re-entry into the Russian
+                market may be possible, but only under strict conditions that align with national
+                economic priorities.
+    ''',
+            'key_features': '''
+                * Departures of foreign firms are viewed as politically motivated rather than economically justified.
+                * Loyalty determines whether companies are supported or restricted.
+                * Remaining foreign companies are presented as strategic economic partners.
+                * Departing firms may face temporary management or threats of nationalization.
+                * Foreign firms are acknowledged as significant tax contributors.
+                * Return or re-entry is allowed but it must align with national interests.
+    ''',
+        },
+        'code_adapted_sovereignty': {
+            'description': '''
+                Following the departure of many foreign companies since 2022,
+                Russian firms and institutions have adapted to the new economic environment
+                through a combination of import substitution, parallel imports, acquisitions, and
+                strategic pivots toward non-Western partners, especially China. In some cases,
+                departing foreign assets were taken over by Russian entities through mergers and
+                acquisitions, helping stabilize certain sectors. The government began promoting
+                economic sovereignty by encouraging domestic alternatives and reducing reliance
+                on Western infrastructure. This included legal restrictions on foreign market research
+                firms and proposals for tighter control over data, with arguments framed around
+                There were efforts to build sovereign digital and financial systems, including
+                domestic software, hardware, and discussions around a sovereign internet. Although
+                the Russian economy still faced vulnerabilities and adjustment challenges, the
+                narrative emphasized resilience, stabilization, and an evolving model of state-backed
+                self-sufficiency in response to sanctions and external pressure.
+    ''',
+            'key_features': '''
+                * Russian companies adapted through import substitution, parallel imports, and buying up assets of departing foreign companies.
+                * Many gaps left by foreign firms have been filled by Russian firms, supporting domestic stability.
+                * Some stabilization occurred in sectors where Russian firms took over operations or acquired foreign assets.
+                * Government-imposed restrictions on foreign market research and potential control of internet and data infrastructure reflect a sovereignty-first approach.
+                * The Russian economy is portrayed as increasingly resilient and less dependent on Western supply chains.
+                * The narrative promotes the development of domestic tech, banking, and strategic industries.
+                * Partnerships with China and other Asian suppliers helped offset the loss of Western inputs.
+                * The economy and industry still experience difficulties and gaps but are portrayed as coping, self-sufficient and adapting under pressure.
+    ''',
+        },
+    }, # ru
+    'ch': {
+        'code_vulnerable_victims': {
+            'description': '''
+                Swiss companies in Russia are portrayed as victims of the aggressor in Russia and Western sanctions. 
+                Barely any criticism for multinationals’ naïve behaviour toward Russia is voiced. 
+                The situation is treated like companies could not have foreseen the situation or tracked the political risks. 
+    ''',
+            'key_features': '''
+                * War is evaluated in free-market terms: state intervention in Russia (e.g. exit taxes, harassment by state officials, nationalization) and/or in the West (e.g. protectionism, complex sanction regimes) is inadequate.
+                * Focus on the costs for companies: companies are forced to sell at a loss, lose assets, and/or rely on inefficient but safer supply chains.
+                * Apolitical companies: the private sector has no obligation to do politics but may only focus on doing business and compliance. 
+                * This narrative is used to push responsibility to politics, asking for diplomatic and regulatory, and/or democratic action. Politicians should deal with the Russian aggression. 
+
+    ''',
+            'keywords': '''
+                bureaucracy;
+                bomplexity;
+                inconsistency;
+                effectiveness.
+    ''',
+        },
+        'code_complicit_enablers': {
+            'description': '''
+                Swiss companies in Russia are portrayed as complicit actors, indirectly supporting an unjust war on Ukraine by paying taxes and by symbolically presenting Russia as a valid place to do business. 
+                Especially big corporations should have a better understanding of geopolitical risks. 
+    ''',
+            'key_features': '''
+                * Good sanctions: Western sanctions are adequate. 
+                * Responsibility: Swiss companies that stay in Russia act irresponsibly. 
+                * Exceptions: Food and pharma companies may stay. 
+                * Bad actors: Some Swiss companies (especially commodity traders and financial services) violate or circumvent sanctions. 
+                * This frame is used to push responsibility to companies. Companies should leave Russia.
+    ''',
+            'keywords': '''
+                money laundering;
+                circumvention;
+                oligarchs;
+                responsibility.
+    ''',
+        },
+    },
+    }, # ch
+
+'v6': {
+    'ru': {
+        'code_conditional_loyalty': {
+            'description': '''
+                Since 2022, the Russian government has responded to the exit of
+                foreign companies by drawing a clear distinction between those that stayed and
+                those that left. Companies that remained in the Russian market have been framed
+                as loyal and reliable partners and have continued to receive political and economic
+                support. In contrast, those that left were portrayed as acting under external political
+                pressure rather than economic logic. The government also attempted to discourage
+                or delay foreign company exits through regulatory and rhetorical means. In some
+                cases, departing firms were placed under temporary external management or faced
+                the threat of nationalization in order to preserve jobs and production continuity. At the
+                same time, officials acknowledged the important role foreign firms played
+                (particularly through tax contributions) and signalled that re-entry into the Russian
+                market may be possible, but only under strict conditions that align with national
+                economic priorities.
+    ''',
+            'key_features': '''
+                * Departures of foreign firms are viewed as politically motivated rather than economically justified.
+                * Loyalty determines whether companies are supported or restricted.
+                * Remaining foreign companies are presented as strategic economic partners.
+                * Departing firms may face temporary management or threats of nationalization.
+                * Foreign firms are acknowledged as significant tax contributors.
+                * Return or re-entry is allowed but it must align with national interests.
+    ''',
+        },
+        'code_adapted_sovereignty': {
+            'description': '''
+                Following the departure of many foreign companies since 2022,
+                Russian firms and institutions have adapted to the new economic environment
+                through a combination of import substitution, parallel imports, acquisitions, and
+                strategic pivots toward non-Western partners, especially China. In some cases,
+                departing foreign assets were taken over by Russian entities through mergers and
+                acquisitions, helping stabilize certain sectors. The government began promoting
+                economic sovereignty by encouraging domestic alternatives and reducing reliance
+                on Western infrastructure. This included legal restrictions on foreign market research
+                firms and proposals for tighter control over data, with arguments framed around
+                There were efforts to build sovereign digital and financial systems, including
+                domestic software, hardware, and discussions around a sovereign internet. Although
+                the Russian economy still faced vulnerabilities and adjustment challenges, the
+                narrative emphasized resilience, stabilization, and an evolving model of state-backed
+                self-sufficiency in response to sanctions and external pressure.
+    ''',
+            'key_features': '''
+                * Russian companies adapted through import substitution, parallel imports, and buying up assets of departing foreign companies.
+                * Many gaps left by foreign firms have been filled by Russian firms, supporting domestic stability.
+                * Some stabilization occurred in sectors where Russian firms took over operations or acquired foreign assets.
+                * Government-imposed restrictions on foreign market research and potential control of internet and data infrastructure reflect a sovereignty-first approach.
+                * The Russian economy is portrayed as increasingly resilient and less dependent on Western supply chains.
+                * The narrative promotes the development of domestic tech, banking, and strategic industries.
+                * Partnerships with China and other Asian suppliers helped offset the loss of Western inputs.
+                * The economy and industry still experience difficulties and gaps but are portrayed as coping, self-sufficient and adapting under pressure.
+    ''',
+        },
+    }, # ru
+    'ch': {
+        'code_vulnerable_victims': {
+            'description': '''
+                Schweizer Unternehmen in Russland werden als Opfer des Aggressors in Russland und der westlichen Sanktionen dargestellt. Kaum eine Kritik am naiven Verhalten der multinationalen Konzerne gegenüber Russland wird geäußert. Die Situation wird so behandelt, als hätten die Unternehmen die Lage nicht voraussehen oder die politischen Risiken nicht einschätzen können.
+    ''',
+            'key_features': '''
+                * Krieg wird in marktwirtschaftlichen Begriffen bewertet: staatliche Intervention in Russland (z. B. Exit-Steuern, Schikane durch Behörden, Enteignungen) und/oder der Westen (z. B. Protektionismus, komplexe Sanktionsregime) ist unangemessen.
+                * Fokus auf Kosten für Unternehmen: Unternehmen sind gezwungen, mit Verlust zu verkaufen, Vermögenswerte zu verlieren und/oder auf ineffiziente, aber sichere Lieferketten zurückzugreifen.
+                * Unpolitische Unternehmen: Der Privatsektor muss sich nicht politisch engagieren, sondern darf sich ausschließlich auf die Geschäftstätigkeit und die Einhaltung von Vorschriften konzentriert.
+                * Dieses Narrativ dient dazu, die Verantwortung an die Politik zu delegieren sowie diplomatisches, regulatorisches und/oder demokratisches Handeln einzufordern. Politiker sollten sich um die Agression Russands kümmern. 
+    ''',
+            'keywords': '''
+                bureaucracy;
+                bomplexity;
+                inconsistency;
+                effectiveness.
+    ''',
+        },
+        'code_complicit_enablers': {
+            'description': '''
+                Schweizer Unternehmen in Russland werden als mitverantwortliche Akteure dargestellt, die durch das Zahlen von Steuern und die symbolische Darstellung Russlands als legitimen Wirtschaftsstandort indirekt einen ungerechten Krieg gegen die Ukraine unterstützen. Insbesondere großen Konzernen wird unterstellt, dass sie ein besseres Verständnis für geopolitische Risiken haben sollten.
+    ''',
+            'key_features': '''
+                * Gute Sanktionen: Westliche Sanktionen sind angebracht.
+                * Verantwortung: Schweizer Unternehmen, die in Russland bleiben, handeln verantwortungslos.
+                * Ausnahmen: Die Lebensmittel- und Pharmafirmen dürfen bleiben.
+                * Böse Akteure: Einige Schweizer Unternehmen (insbesondere Rohstoffhändler und Finanzdienstleister) verletzen oder umgehen Sanktionen.
+                * Dieses Framing verschiebt die Verantwortung auf die Unternehmen. Unternehmen sollen sich aus Russland zurückziehen.
+
+    ''',
+            'keywords': '''
+                money laundering;
+                circumvention;
+                oligarchs;
+                responsibility.
+    ''',
+        },
+    },
+    }, # ch
 
 }

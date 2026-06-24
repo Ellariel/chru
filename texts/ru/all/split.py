@@ -9,8 +9,8 @@ def read_file(f):
     with open(f, 'r', encoding='utf-8') as file:
         return file.read()
 
-DOC_SPLITER = 'Dokument TANZ'
-WORDS_SPLITER = ' Wörter'
+DOC_SPLITER = 'Document ' 
+WORDS_SPLITER = ' words'
 
 if __name__ == "__main__":
     
@@ -24,6 +24,7 @@ if __name__ == "__main__":
 
     for f in tqdm(file_list):
         docs = read_file(f).split(DOC_SPLITER)
+        #print(len(docs))
         for d in docs:
             words = d.split(WORDS_SPLITER)[0].split('\n')[-1]\
                 .replace('\n', '').replace(',', '')
@@ -47,6 +48,7 @@ if __name__ == "__main__":
                                 .replace('  ', ' ')\
                                 .strip(),
                             })
+        #break
     print(f"{len(data)} articles found.")
     data = pd.DataFrame(data)
     data.to_csv(os.path.join(base_dir, f'{outlet}.csv'), index=False, sep=';')
